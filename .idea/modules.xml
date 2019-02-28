@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/edu.bsu.cs.cardinalweather.iml" filepath="$PROJECT_DIR$/.idea/modules/edu.bsu.cs.cardinalweather.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/edu.bsu.cs.cardinalweather.main.iml" filepath="$PROJECT_DIR$/.idea/modules/edu.bsu.cs.cardinalweather.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/edu.bsu.cs.cardinalweather.test.iml" filepath="$PROJECT_DIR$/.idea/modules/edu.bsu.cs.cardinalweather.test.iml" />
+    </modules>
+  </component>
+</project>
