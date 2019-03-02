@@ -1,4 +1,4 @@
-package edu.bsu.cs;//**package edu.bsu.cs222;
+package edu.bsu.cs;
 
 import com.google.gson.Gson;
 
@@ -10,15 +10,20 @@ import java.net.URLConnection;
 
 public class PullRequest {
 
-    public WeatherObject getWeather(String exampleSearch) throws IOException {
+    public WeatherPoints getWeather(String exampleSearch) throws IOException {
         URL url = new URL(exampleSearch);
         URLConnection connection = url.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(
                 connection.getInputStream()));
 
-        //WeatherObject weatherJson = new Gson().fromJson(in, WeatherObject.class);
-        return new Gson().fromJson(in, WeatherObject.class);
+        return new Gson().fromJson(in, WeatherPoints.class);
     }
-}
 
-//**/
+    public BufferedReader getDataStream(String urlQuery) throws IOException {
+        URL url = new URL(urlQuery);
+        URLConnection connection = url.openConnection();
+        return new BufferedReader(new InputStreamReader(
+                connection.getInputStream()));
+    }
+
+}

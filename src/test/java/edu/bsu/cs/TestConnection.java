@@ -29,8 +29,9 @@ public class TestConnection {
     public void testPullRequest() throws IOException {
         String exampleSearch = "https://api.weather.gov/points/39.7456,-97.0892";
         PullRequest requester = new PullRequest();
-        WeatherObject weatherJson = requester.getWeather(exampleSearch);
+        WeatherPoints weatherJson = requester.getWeather(exampleSearch);
 
+        //System.out.println(weatherJson.getProperties().getForecast());
         Assert.assertNotNull(weatherJson);
     }
 
