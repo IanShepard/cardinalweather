@@ -33,7 +33,9 @@ public class Main extends Application {
         ArrayList<Period> exampleForecast = parser.getCurrentForecast(weatherPoints);
         HashMap<String, String> forecastToday = exampleForecast.get(0).getForecast();
 
-        String displayString = forecastToday.get("name") + "\nTemperature: " + forecastToday.get("temperature") + "°" + forecastToday.get("temperatureUnit") + "\nWind Speed is " + forecastToday.get("windSpeed") + " going " + forecastToday.get("windDirection") + "\nCloud cover is " + forecastToday.get("shortForecast");
+        WeatherFormatter formatter = new WeatherFormatter();
+        String displayString = formatter.simpleFormat(forecastToday);
+
         Label test = new Label(displayString);
         Scene scene = new Scene(test);
         primaryStage.setScene(scene);

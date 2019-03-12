@@ -12,7 +12,7 @@ import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class testImage extends Application {
+public class testJavaFX extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -29,6 +29,5 @@ public class testImage extends Application {
         Scene scene = new Scene(hbox);
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 }
