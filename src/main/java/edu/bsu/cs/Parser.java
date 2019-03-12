@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
+//parses weather data
 public class Parser {
 
     public ArrayList<Period>getCurrentForecast(WeatherPoints weatherPoints) throws IOException {

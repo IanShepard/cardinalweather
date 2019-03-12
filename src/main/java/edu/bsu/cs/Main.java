@@ -18,7 +18,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+     //retrieves weather data
     private WeatherPoints getSampleWeatherPointsAsJson() {
         InputStream sampleInputStream =
                 getClass().getClassLoader().getResourceAsStream("PointsJsonExample");
