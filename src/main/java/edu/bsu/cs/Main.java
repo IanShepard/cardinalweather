@@ -3,7 +3,11 @@ package edu.bsu.cs;
 import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -36,8 +40,31 @@ public class Main extends Application {
         WeatherFormatter formatter = new WeatherFormatter();
         String displayString = formatter.simpleFormat(forecastToday);
 
-        Label test = new Label(displayString);
-        Scene scene = new Scene(test);
+        VBox parent = new VBox();
+
+        //this is a buttonBox in the main page
+        HBox buttonBox = new HBox();
+
+        Button buttonOne = new Button("Forecast");
+        buttonBox.getChildren().add(buttonOne);
+
+        Button buttonTwo = new Button("Radar");
+        buttonBox.getChildren().add(buttonTwo);
+
+        Button buttonThree = new Button("History");
+        buttonBox.getChildren().add(buttonThree);
+
+        parent.getChildren().add(buttonBox);
+        // buttonBox end here
+
+        HBox newArea = new HBox(new Label("Current Temperature"));
+        TextField textFieldOne = new TextField();
+        newArea.getChildren().add(textFieldOne);
+        parent.getChildren().add(newArea);
+
+        parent.getChildren().add(new Label(displayString));
+
+        Scene scene = new Scene(parent);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
