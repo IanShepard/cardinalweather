@@ -1,7 +1,7 @@
 package edu.bsu.cs;
 
 import java.util.HashMap;
-
+//sorts parsed data into a result
 public class WeatherFormatter {
     /*
     takes a HashMap of one forecast and returns a readable string foremat

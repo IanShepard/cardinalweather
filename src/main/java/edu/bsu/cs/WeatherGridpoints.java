@@ -1,7 +1,7 @@
 package edu.bsu.cs;
 
 import java.util.HashMap;
-
+//provides sorts parsed data under the category named period
 public class WeatherGridpoints {
     private String type;
     private WeatherGridpointsProperties properties;
