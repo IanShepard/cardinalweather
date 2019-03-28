@@ -23,7 +23,10 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-     //retrieves weather data
+
+    /*
+    uses a local json text file and converts it to weather points to use for tests
+     */
     private WeatherPoints getSampleWeatherPointsAsJson() {
         InputStream sampleInputStream =
                 getClass().getClassLoader().getResourceAsStream("PointsJsonExample");
@@ -35,8 +38,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         WeatherPoints weatherPoints = getSampleWeatherPointsAsJson();
         Parser parser = new Parser();
-        ArrayList<Period> exampleForecast = parser.getCurrentForecast(weatherPoints);
-        HashMap<String, String> forecastToday = exampleForecast.get(0).getForecast();
+        Period[] exampleForecast = parser.getCurrentForecast(weatherPoints);
+        HashMap<String, String> forecastToday = exampleForecast[0].getForecast();
 
         WeatherFormatter formatter = new WeatherFormatter();
         String displayString = formatter.simpleFormat(forecastToday);

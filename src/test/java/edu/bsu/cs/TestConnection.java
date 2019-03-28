@@ -29,7 +29,7 @@ public class TestConnection {
     public void testPullRequest() throws IOException {
         String exampleSearch = "https://api.weather.gov/points/39.7456,-97.0892";
         PullRequest requester = new PullRequest();
-        WeatherPoints weatherJson = requester.getWeather(exampleSearch);
+        WeatherPoints weatherJson = requester.pullWeather(exampleSearch);
 
         //System.out.println(weatherJson.getProperties().getForecast());
         Assert.assertNotNull(weatherJson);
@@ -43,5 +43,27 @@ public class TestConnection {
 
         URL correctURL = new URL("https://api.weather.gov/points/-31,80");
         Assert.assertEquals(url, correctURL);
+    }
+
+    @Test
+    public void testPullZonesForecast() {
+        PullRequest pull = new PullRequest();
+        WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/INZ041");
+        double latitude = wzf.getGeometry().getCoordinates()[0];
+
+        double expected0 = -85.444297700000007;
+        Assert.assertEquals(expected0, latitude, 0.00002);
+    }
+
+    @Test
+    public void testPullPoints() {
+        PullRequest pull = new PullRequest();
+        WeatherPoints weatherPoints = pull.pullPoints(-85.4443, 40.3792);
+
+        String expectedId = "https://api.weather.gov/points/40.3792,-85.4443";
+        String expectedForecast = "https://api.weather.gov/gridpoints/IND/80,97/forecast";
+
+        Assert.assertEquals(expectedId, weatherPoints.getId());
+        Assert.assertEquals(expectedForecast, weatherPoints.getProperties().getForecast());
     }
 }
