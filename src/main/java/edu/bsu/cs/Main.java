@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -19,6 +20,9 @@ public class Main extends Application {
         launch(args);
     }
 
+    /*
+    uses a local json text file and converts it to weather points to use for tests
+     */
     private WeatherPoints getSampleWeatherPointsAsJson() {
         InputStream sampleInputStream =
                 getClass().getClassLoader().getResourceAsStream("PointsJsonExample");
@@ -30,15 +34,21 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         WeatherPoints weatherPoints = getSampleWeatherPointsAsJson();
         Parser parser = new Parser();
-        ArrayList<Period> exampleForecast = parser.getCurrentForecast(weatherPoints);
-        HashMap<String, String> forecastToday = exampleForecast.get(0).getForecast();
+        Period[] exampleForecast = parser.getCurrentForecast(weatherPoints);
+        HashMap<String, String> forecastToday = exampleForecast[0].getForecast();
 
         WeatherFormatter formatter = new WeatherFormatter();
         String displayString = formatter.simpleFormat(forecastToday);
 
         Label test = new Label(displayString);
-        Scene scene = new Scene(test);
-        primaryStage.setScene(scene);
+        Scene scene = new Scene(test, 500, 500);
+
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(new Label("current weather"), test);
+        Scene scene1 = new Scene(hBox);
+
+        primaryStage.setTitle("Cardinal Weather");
+        primaryStage.setScene(scene1);
         primaryStage.show();
     }
 }

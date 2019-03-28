@@ -1,11 +1,14 @@
 package edu.bsu.cs;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class WeatherGridpoints {
     private String type;
     private WeatherGridpointsProperties properties;
+
+    public String getType() {
+        return type;
+    }
 
     public WeatherGridpointsProperties getProperties() {
         return properties;
@@ -15,9 +18,9 @@ public class WeatherGridpoints {
 class WeatherGridpointsProperties {
     private String updated;
     private String units;
-    private ArrayList<Period> periods;
+    private Period[] periods;
 
-    public ArrayList<Period> getPeriods() {
+    public Period[] getPeriods() {
         return periods;
     }
 }
