@@ -99,7 +99,9 @@ public class Main extends Application {
 
         HBox newArea = new HBox(new Label("Current Temperature"));
         TextField textFieldOne = new TextField();
+        Button search = new Button("Search");
         newArea.getChildren().add(textFieldOne);
+        newArea.getChildren().add(search);
         parent.getChildren().add(newArea);
 
         parent.getChildren().add(new Label(displayString));
