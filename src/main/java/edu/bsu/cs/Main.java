@@ -15,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main extends Application {
@@ -36,10 +35,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        WeatherPoints weatherPoints = getSampleWeatherPointsAsJson();
         Parser parser = new Parser();
-        Period[] exampleForecast = parser.getCurrentForecast(weatherPoints);
-        HashMap<String, String> forecastToday = exampleForecast[0].getForecast();
+        Period[] forecast = parser.getForecast("Delaware,IN");
+        HashMap<String, String> forecastToday = forecast[0].getForecast();
 
         WeatherFormatter formatter = new WeatherFormatter();
         String displayString = formatter.simpleFormat(forecastToday);
@@ -107,7 +105,18 @@ public class Main extends Application {
         newArea.getChildren().add(search);
         parent.getChildren().add(newArea);
 
-        parent.getChildren().add(new Label(displayString));
+
+        search.setOnAction(actionEvent ->
+            {
+                String locationSearch;
+                locationSearch = textFieldOne.getText();
+                Period[] locatedForecast = parser.getForecast(locationSearch);
+                HashMap<String, String> forecastNow = locatedForecast[0].getForecast();
+                String display = formatter.simpleFormat(forecastNow);
+                parent.getChildren().add(new Label(display));
+            }
+        );
+
 
         Scene scene = new Scene(parent, 500, 400);
         primaryStage.setScene(scene);
