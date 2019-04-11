@@ -29,7 +29,9 @@ public class Parser {
         Period[] resultForecast;
 
         String forecastUrl = getZoneNameUrl(name);
-
+        if (forecastUrl == null || forecastUrl.length() == 0 ) {
+            return new Period[0];
+        }
         WeatherZonesForecast weatherZonesForecast = pull.pullZonesForecast(forecastUrl);
 
         double[] point = weatherZonesForecast.getGeometry().getCoordinates();
@@ -57,7 +59,9 @@ public class Parser {
                 wzpState = wzp.getState().toLowerCase(); //toLowerCase() for non-case sensitive string matching
             }
             if (input.contains(wzpName) || input.contains(wzpState)) {
-                location = wzpName + ", " + wzpState;
+                wzpName = new WeatherFormatter().titleCaseConversion(wzpName);
+                System.out.println(wzpName);
+                location = wzpName + ", " + wzpState.toUpperCase();
                 matches.add(location);
             }
         }

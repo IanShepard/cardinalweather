@@ -69,7 +69,7 @@ public class Main extends Application {
         Button buttonTwo = new Button("Radar");
 
             VBox parentInButtonTwo = new VBox();
-            TextArea areaTwo = new TextArea();
+            TextArea areaTwo = new TextArea().;
             parentInButtonTwo.getChildren().add(areaTwo);
         Stage buttonTwoStage = new Stage();
         Scene sceneTwo = new Scene(parentInButtonTwo);
@@ -109,13 +109,18 @@ public class Main extends Application {
 
         search.setOnAction(actionEvent ->
             {
-                String locationSearch;
-                locationSearch = textFieldOne.getText();
+                String locationSearch = textFieldOne.getText();
                 ArrayList<String> options = parser.searchZoneNames(locationSearch);
                 //Use options in a choice box (or auto complete box if available)
                 Period[] locatedForecast = parser.getForecast(options.get(0));
-                HashMap<String, String> forecastNow = locatedForecast[0].getForecast();
-                String display = formatter.simpleFormat(forecastNow);
+                System.out.println(locationSearch + "\n" + options.get(0));
+                String display;
+                if (locatedForecast.length == 0) {
+                    display = "No results for \"" + locationSearch + "\"";
+                } else {
+                    HashMap<String, String> forecastNow = locatedForecast[0].getForecast();
+                    display = formatter.simpleFormat(forecastNow);
+                }
                 parent.getChildren().add(new Label(display));
             }
         );
