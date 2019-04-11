@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main extends Application {
@@ -36,7 +37,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         Parser parser = new Parser();
-        Period[] forecast = parser.getForecast("Delaware,IN");
+        Period[] forecast = parser.getForecast("Delaware, IN");
         HashMap<String, String> forecastToday = forecast[0].getForecast();
 
         WeatherFormatter formatter = new WeatherFormatter();
@@ -110,7 +111,9 @@ public class Main extends Application {
             {
                 String locationSearch;
                 locationSearch = textFieldOne.getText();
-                Period[] locatedForecast = parser.getForecast(locationSearch);
+                ArrayList<String> options = parser.searchZoneNames(locationSearch);
+                //Use options in a choice box (or auto complete box if available)
+                Period[] locatedForecast = parser.getForecast(options.get(0));
                 HashMap<String, String> forecastNow = locatedForecast[0].getForecast();
                 String display = formatter.simpleFormat(forecastNow);
                 parent.getChildren().add(new Label(display));
