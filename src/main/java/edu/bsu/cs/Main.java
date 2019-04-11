@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -35,96 +36,33 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        Parser parser = new Parser();
-        Period[] forecast = parser.getForecast("Delaware, IN");
-        HashMap<String, String> forecastToday = forecast[0].getForecast();
+    public void start(Stage primaryStage) {
+        //Home Scene Top Section
+        Button searchButton = new Button("Search");
+        TextArea searchBox = new TextArea();
+        Label location = new Label("Location data goes here");
+        Image weatherIcon = new Image("https://api.weather.gov/icons/land/day/sct?size=small");
 
-        WeatherFormatter formatter = new WeatherFormatter();
-        String displayString = formatter.simpleFormat(forecastToday);
-
-        VBox parent = new VBox();
-
-        //this is a buttonBox in the main page
-        HBox buttonBox = new HBox();
-
-        //buttonOne details
-        Button buttonOne = new Button("Forecast");
-
-            VBox parentInButtonOne = new VBox();
-            TextArea areaOne = new TextArea();
-            parentInButtonOne.getChildren().add(areaOne);
-
-        Stage buttonOneStage = new Stage();
-        Scene sceneOne = new Scene(parentInButtonOne);
-        buttonOneStage.setScene(sceneOne);
-        buttonOneStage.setTitle("Forecast Page");
-
-        buttonOne.setOnAction(actionEvent -> buttonOneStage.show());
-
-        buttonBox.getChildren().add(buttonOne);
-        //buttonOne ends here
-
-        //button2222222
-        Button buttonTwo = new Button("Radar");
-
-            VBox parentInButtonTwo = new VBox();
-            TextArea areaTwo = new TextArea().;
-            parentInButtonTwo.getChildren().add(areaTwo);
-        Stage buttonTwoStage = new Stage();
-        Scene sceneTwo = new Scene(parentInButtonTwo);
-        buttonTwoStage.setScene(sceneTwo);
-        buttonTwoStage.setTitle("Radar");
-
-        buttonTwo.setOnAction(actionEvent -> buttonTwoStage.show());
-
-        buttonBox.getChildren().add(buttonTwo);
-        //ends
-
-        //button333333
-        Button buttonThree = new Button("History");
-            VBox parentInButtonThree = new VBox();
-            TextArea areaThree = new TextArea();
-            parentInButtonThree.getChildren().add(areaThree);
-        Stage buttonThreeStage = new Stage();
-        Scene sceneThree = new Scene(parentInButtonThree);
-        buttonThreeStage.setScene(sceneThree);
-        buttonThreeStage.setTitle("History");
-
-        buttonThree.setOnAction(actionEvent -> buttonThreeStage.show());
-
-        buttonBox.getChildren().add(buttonThree);
-        //ends
-
-        parent.getChildren().add(buttonBox);
-        //.............................. the entire buttonBox end here ...........................................
-
-        HBox newArea = new HBox(new Label("Current Temperature"));
-        TextField textFieldOne = new TextField();
-        Button search = new Button("Search");
-        newArea.getChildren().add(textFieldOne);
-        newArea.getChildren().add(search);
-        parent.getChildren().add(newArea);
+        HBox header = new HBox(searchBox, searchButton, location);
 
 
-        search.setOnAction(actionEvent ->
-            {
-                String locationSearch = textFieldOne.getText();
-                ArrayList<String> options = parser.searchZoneNames(locationSearch);
-                //Use options in a choice box (or auto complete box if available)
-                Period[] locatedForecast = parser.getForecast(options.get(0));
-                System.out.println(locationSearch + "\n" + options.get(0));
-                String display;
-                if (locatedForecast.length == 0) {
-                    display = "No results for \"" + locationSearch + "\"";
-                } else {
-                    HashMap<String, String> forecastNow = locatedForecast[0].getForecast();
-                    display = formatter.simpleFormat(forecastNow);
-                }
-                parent.getChildren().add(new Label(display));
-            }
-        );
+        //Home Scene Middle Section
+        Label currentTemperature = new Label("Example 70");
+        Label highTemperature = new Label("Example 80");
+        Label lowTemperature = new Label("Example 60");
+        Image icon = new Image("https://api.weather.gov/icons/land/night/tsra,90?size=small");
 
+        VBox highLowBox = new VBox(highTemperature, lowTemperature);
+        HBox temperatureBox = new HBox(currentTemperature, highLowBox);
+        VBox forecastBox = new VBox(temperatureBox);
+
+
+        //Home Scene Bottom Section
+        Button forecastButton = new Button("Daily Forecast");
+
+
+        //Home Screen Parent element
+        VBox parent = new VBox(header, forecastBox, forecastButton);
 
         Scene scene = new Scene(parent, 500, 400);
         primaryStage.setScene(scene);
