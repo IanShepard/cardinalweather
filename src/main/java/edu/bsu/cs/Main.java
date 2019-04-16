@@ -2,14 +2,17 @@ package edu.bsu.cs;
 
 import com.google.gson.Gson;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -37,35 +40,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //Home Scene Top Section
-        Button searchButton = new Button("Search");
-        TextArea searchBox = new TextArea();
-        Label location = new Label("Location data goes here");
-        Image weatherIcon = new Image("https://api.weather.gov/icons/land/day/sct?size=small");
 
-        HBox header = new HBox(searchBox, searchButton, location);
-
-
-        //Home Scene Middle Section
-        Label currentTemperature = new Label("Example 70");
-        Label highTemperature = new Label("Example 80");
-        Label lowTemperature = new Label("Example 60");
-        Image icon = new Image("https://api.weather.gov/icons/land/night/tsra,90?size=small");
-
-        VBox highLowBox = new VBox(highTemperature, lowTemperature);
-        HBox temperatureBox = new HBox(currentTemperature, highLowBox);
-        VBox forecastBox = new VBox(temperatureBox);
-
-
-        //Home Scene Bottom Section
-        Button forecastButton = new Button("Daily Forecast");
-
-
-        //Home Screen Parent element
-        VBox parent = new VBox(header, forecastBox, forecastButton);
-
-        Scene scene = new Scene(parent, 500, 400);
-        primaryStage.setScene(scene);
+        Period[] asdf = new Parser().getForecast("Delaware, IN");
+        SceneBuilder sceneBuilder = new SceneBuilder();
+        Scene homeScene = sceneBuilder.getHomeScene(asdf[0]);
+        primaryStage.setScene(homeScene);
         primaryStage.setTitle("Cardinal Weather");
         primaryStage.show();
     }
