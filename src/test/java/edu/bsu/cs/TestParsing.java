@@ -3,7 +3,6 @@ package edu.bsu.cs;
 import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TestParsing {
+    Parser parser = new Parser();
+    PullRequest pull = new PullRequest();
 
     private WeatherPoints getSampleWeatherPointsAsJson() {
         InputStream sampleInputStream =
@@ -32,7 +33,6 @@ public class TestParsing {
     @Test
     public void testGetCurrentWeather() throws IOException {
         WeatherPoints weatherPoints = getSampleWeatherPointsAsJson();
-        Parser parser = new Parser();
         Period[] exampleForecast = parser.getCurrentForecast(weatherPoints);
         HashMap<String, String> forecastToday = exampleForecast[0].getForecast();
 
@@ -42,7 +42,6 @@ public class TestParsing {
 
     @Test
     public void testGetWeather0() {
-        Parser parser = new Parser();
         Period[] forecast = parser.getForecast("Delaware, IN");
 
         String expectedName = "";
@@ -53,7 +52,7 @@ public class TestParsing {
 
     @Test
     public void testGetZones() {
-        WeatherZones wz = new PullRequest().pullZones();
+        WeatherZones wz = pull.pullZones();
 
         String expected0 = "https://api.weather.gov/zones/forecast/AKZ017";
         Assert.assertEquals(expected0, wz.getFeatures()[0].getId());
@@ -64,7 +63,7 @@ public class TestParsing {
 
     @Test
     public void testGetZonesForecast() {
-        WeatherZonesForecast wzf = new PullRequest().pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
+        WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
 
 
         String expectedId = "https://api.weather.gov/zones/forecast/AKZ017";
@@ -73,7 +72,7 @@ public class TestParsing {
 
     @Test
     public void testParsingGeometryFromWZF() {
-        WeatherZonesForecast wzf = new PullRequest().pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
+        WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
         double[] coords = wzf.getGeometry().getCoordinates();
 
         double expected1 =   -138.41196360000001;
@@ -85,8 +84,6 @@ public class TestParsing {
 
     @Test
     public void testGetPoints() {
-        PullRequest pull = new PullRequest();
-
         WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
         double[] coords = wzf.getGeometry().getCoordinates();
         String url = "https://api.weather.gov/points/" + coords[1] + "," + coords[0];
@@ -94,5 +91,23 @@ public class TestParsing {
 
         Assert.assertNotNull(wg.getProperties());
 
+    }
+
+    @Test
+    public void testGetSearchZones0() {
+        //testing for the best case scenario (one item in list)
+        ArrayList<WeatherZonesFeatures> options = parser.searchZoneNamesFor("Delaware, IN");
+        Assert.assertTrue(options.size() == 1);
+
+        String expectedLocation = "Delaware, IN";
+        Assert.assertEquals(expectedLocation, options.get(0).getProperties().getLocation());
+
+        //testing for more than one item in list
+        ArrayList<WeatherZonesFeatures> options1 = parser.searchZoneNamesFor("Delaware");
+        Assert.assertTrue(options1.size() > 1);
+
+        //testing for no items in list (no matches found in zones)
+        ArrayList<WeatherZonesFeatures> options2 = parser.searchZoneNamesFor("unreasonable search quarry");
+        Assert.assertTrue(options2.size() == 0);
     }
 }

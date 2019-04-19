@@ -25,12 +25,15 @@ public class Parser {
         return forecasts.getProperties().getPeriods();
     }
 
-    public Period[] getForecast(String name) {
-        Period[] resultForecast;
+    public Period[] getForecast(String location) {
+        WeatherGridpoints weatherGridpoints = getGridpoints(location);
+        return weatherGridpoints.getProperties().getPeriods();
+    }
 
+    public WeatherGridpoints getGridpoints(String name) {
         String forecastUrl = getZoneNameUrl(name);
         if (forecastUrl == null || forecastUrl.length() == 0 ) {
-            return new Period[0];
+            //return new Period[0];
         }
         WeatherZonesForecast weatherZonesForecast = pull.pullZonesForecast(forecastUrl);
 
@@ -40,32 +43,54 @@ public class Parser {
         String forecastUrl1 = weatherPoints.getProperties().getForecast();
         WeatherGridpoints weatherGridpoints = pull.pullGridpoints(forecastUrl1);
 
-        resultForecast = weatherGridpoints.getProperties().getPeriods();
+        return weatherGridpoints;
 
-        return resultForecast;
     }
 
-    public ArrayList<String> searchZoneNames(String input) {
-        //Each returned String is formatted "<name>, <state>"
-        ArrayList<String> matches = new ArrayList<>();
-        input = input.toLowerCase(); //toLowerCase() for non-case sensitive string matching
+    /*
+    Takes a string @Param input as a search term. it is searching through the names and states fields of
+    WeatherZonesFeatures to find if input contains any name or state. There are two list that are generated, a perfect
+    -match list and a match list. If there are any perfect matches then only that list will be returned, otherwise the
+    match list will be returned. The perfect-match list will be shorter than the match list.
+     */
+    public ArrayList<WeatherZonesFeatures> searchZoneNamesFor(String input) {
+        //setup
+        ArrayList<WeatherZonesFeatures> matches = new ArrayList<>();
+        ArrayList<WeatherZonesFeatures> perfectMatches = new ArrayList<>();
+        input = input.toLowerCase();
+        String[] inputwords = input.split(" ");
+        String wzpName;
+        String wzpState;
         WeatherZonesFeatures[] wzf = wz.getFeatures();
-        String location;
+
+        //
         for (WeatherZonesFeatures feature : wzf) {
             WeatherZonesProperties wzp = feature.getProperties();
-            String wzpName = wzp.getName().toLowerCase(); //toLowerCase() for non-case sensitive string matching
-            String wzpState = "The string here doesn't matter; it just can't be a state abbreviation.";
-            if (wzp.getState() != null) {
+            wzpName = wzp.getName().toLowerCase(); //toLowerCase() for non-case sensitive string matching
+            //if{}else{} is for the assignment of wzpState because it is possible that .getState() will return null
+            if (wzp.getState() != null)
                 wzpState = wzp.getState().toLowerCase(); //toLowerCase() for non-case sensitive string matching
+            else {
+                wzpState = "!!!"; //string needs to not match anything in name or state field in wzp
             }
-            if (input.contains(wzpName) || input.contains(wzpState)) {
-                wzpName = new WeatherFormatter().titleCaseConversion(wzpName);
-                System.out.println(wzpName);
-                location = wzpName + ", " + wzpState.toUpperCase();
-                matches.add(location);
+
+            //creates a smaller list that matches the input more exactly
+            if (input.contains(wzpName) && input.contains(wzpState)) {
+                perfectMatches.add(feature);
+            }
+
+            //creates a larger list that matches the input more loosely
+            for (String inputWord :inputwords) { //for each word in input
+                if (wzpName.matches(inputWord) || wzpState.matches(inputWord)) { //check if any single word is contained in a name or state
+                    matches.add(feature);
+                }
             }
         }
-
+        //if there are any perfect matches return that list
+        if (!perfectMatches.isEmpty()) {
+            return perfectMatches;
+        }
+        //otherwise, return the larger, more generic list
         return matches;
     }
 
@@ -85,7 +110,7 @@ public class Parser {
 
     /*
     Only used in getForecast(). Takes in string in the format "<name>, <state>". this string is produced by
-    searchZoneNames()
+    searchZoneNamesFor()
      */
     private String getZoneNameUrl(String location) {
         String resultUrl = "";

@@ -84,6 +84,15 @@ public class SceneBuilder {
         return forecastBox;
     }
 
+    /*
+    private HBox getHigh(Period period) {}
+
+    private HBox getLow (Period period) {}
+
+    private VBox getHighLow (Period period) {}
+
+    private HBox getCompact () {}
+    */
 
     /*
     Takes a node with text and sets the font size so that the characters are ptSize pixels tall.

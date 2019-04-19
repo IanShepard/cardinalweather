@@ -34,7 +34,6 @@ class WeatherZonesProperties {
     private ArrayList<String> forecastOffices;
     private ArrayList<String> timeZone;
 
-
     public String getId() {
         return id;
     }
@@ -49,5 +48,9 @@ class WeatherZonesProperties {
 
     public String getState() {
         return state;
+    }
+
+    public String getLocation() {
+        return name + ", " + state;
     }
 }
