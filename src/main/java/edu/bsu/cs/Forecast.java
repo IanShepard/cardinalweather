@@ -2,7 +2,8 @@ package edu.bsu.cs;
 
 public class Forecast {
     private String location;
-    private String time;
+    private String timeGenerated;
+    private String timeNow;
     private int highTemperature;
     private int lowTemperature;
     private int currentTemperature;
@@ -25,7 +26,6 @@ public class Forecast {
     private int visibility; //in miles
 
     public Forecast(WeatherZonesFeatures wzf) {
-        PullRequest pull = new PullRequest();
         Parser parser = new Parser();
 
         location = wzf.getProperties().getLocation();

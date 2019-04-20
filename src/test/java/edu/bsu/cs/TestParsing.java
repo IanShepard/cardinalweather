@@ -5,11 +5,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class TestParsing {
     private Parser parser = new Parser();
@@ -28,59 +26,6 @@ public class TestParsing {
 
         Assert.assertEquals("https://api.weather.gov/gridpoints/TOP/31,80/forecast",
                 weatherPoints.getProperties().getForecast());
-    }
-
-
-    @Test
-    public void testGetWeather0() {
-        ArrayList<WeatherZonesFeatures> wzf = parser.searchZoneNamesFor("Delaware, IN");
-        Period[] forecast = parser.getForecast(wzf.get(0));
-
-        int expectedNumber = 1;
-        Assert.assertEquals(expectedNumber, forecast[0].getNumber());
-    }
-
-    @Test
-    public void testGetZones() {
-        WeatherZones wz = pull.pullZones();
-
-        String expected0 = "https://api.weather.gov/zones/forecast/AKZ017";
-        Assert.assertEquals(expected0, wz.getFeatures()[0].getId());
-
-        String expected1 = "Cape Fairweather to Cape Suckling Coastal Area";
-        Assert.assertEquals(expected1, wz.getFeatures()[0].getProperties().getName());
-    }
-
-    @Test
-    public void testGetZonesForecast() {
-        WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
-
-
-        String expectedId = "https://api.weather.gov/zones/forecast/AKZ017";
-        Assert.assertEquals(expectedId, wzf.getId());
-    }
-
-    @Test
-    public void testParsingGeometryFromWZF() {
-        WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
-        double[] coords = wzf.getGeometry().getCoordinates();
-
-        double expected1 =   -138.41196360000001;
-        Assert.assertEquals(expected1, coords[0], 0.00002);
-
-        double expected2 = 59.091370499999996;
-        Assert.assertEquals(expected2, coords[1], 0.00002);
-    }
-
-    @Test
-    public void testGetPoints() {
-        WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
-        double[] coords = wzf.getGeometry().getCoordinates();
-        String url = "https://api.weather.gov/points/" + coords[1] + "," + coords[0];
-        WeatherGridpoints wg = pull.pullGridpoints(url);
-
-        Assert.assertNotNull(wg.getProperties());
-
     }
 
     @Test
@@ -102,4 +47,35 @@ public class TestParsing {
         int expectedSize1 = 0;
         Assert.assertEquals(expectedSize1, options2.size());
     }
+
+    @Test
+    public void testGetForecast() {
+        ArrayList<WeatherZonesFeatures> wzf = parser.searchZoneNamesFor("Delaware, IN");
+        Period[] forecast = parser.getForecast(wzf.get(0));
+
+        int expectedNumber = 1;
+        Assert.assertEquals(expectedNumber, forecast[0].getNumber());
+    }
+
+    @Test
+    public void testGetHourlyForecast() {
+        ArrayList<WeatherZonesFeatures> wzf = parser.searchZoneNamesFor("Delaware, IN");
+        Period[] forecast = parser.getHourlyForecast(wzf.get(0));
+
+        int expected = 1;
+        Assert.assertEquals(expected, forecast[0].getNumber());
+    }
+
+    @Test
+    public void testParsingGeometryFromWZF() {
+        WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/AKZ017");
+        double[] coords = wzf.getGeometry().getCoordinates();
+
+        double expected1 =   -138.41196360000001;
+        Assert.assertEquals(expected1, coords[0], 0.00002);
+
+        double expected2 = 59.091370499999996;
+        Assert.assertEquals(expected2, coords[1], 0.00002);
+    }
+
 }
