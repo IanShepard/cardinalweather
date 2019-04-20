@@ -26,26 +26,6 @@ public class TestConnection {
     }
 
     @Test
-    public void testPullRequest() throws IOException {
-        String exampleSearch = "https://api.weather.gov/points/39.7456,-97.0892";
-        PullRequest requester = new PullRequest();
-        WeatherPoints weatherJson = requester.pullWeather(exampleSearch);
-
-        //System.out.println(weatherJson.getProperties().getForecast());
-        Assert.assertNotNull(weatherJson);
-    }
-
-    @Test
-    public void testURLBuilder() throws MalformedURLException {
-        String exampleSearch = "-31,80";
-        URLFormer urlFormer = new URLFormer();
-        URL url = urlFormer.formPointsUrlFrom(exampleSearch);
-
-        URL correctURL = new URL("https://api.weather.gov/points/-31,80");
-        Assert.assertEquals(url, correctURL);
-    }
-
-    @Test
     public void testPullZonesForecast() {
         PullRequest pull = new PullRequest();
         WeatherZonesForecast wzf = pull.pullZonesForecast("https://api.weather.gov/zones/forecast/INZ041");

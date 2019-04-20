@@ -28,6 +28,7 @@ class WeatherGridpointsProperties {
 class Period {
     private int number;
     private String name;
+    private String startTime;
     private String isDayTime;
     private int temperature;
     private String temperatureUnit;
@@ -38,25 +39,27 @@ class Period {
     private String detailedForecast;
 
     public HashMap<String, String> getForecast() {
-        HashMap<String, String> collection = new HashMap<>();
-        collection.put("number", getNumberAsString());
-        collection.put("name", name);
-        collection.put("isDayTime", isDayTime);
-        collection.put("temperature", getTemperatureAsString());
-        collection.put("temperatureUnit", temperatureUnit);
-        collection.put("windSpeed", windSpeed);
-        collection.put("windDirection", windDirection);
-        collection.put("icon", icon);
-        collection.put("shortForecast", shortForecast);
-        collection.put("detailedForecast", detailedForecast);
+        HashMap<String, String> forecast = new HashMap<>();
+        forecast.put("number", getNumberAsString());
+        forecast.put("name", name);
+        forecast.put("startTime", startTime);
+        forecast.put("isDayTime", isDayTime);
+        forecast.put("temperature", getTemperatureAsString());
+        forecast.put("temperatureUnit", temperatureUnit);
+        forecast.put("windSpeed", windSpeed);
+        forecast.put("windDirection", windDirection);
+        forecast.put("icon", icon);
+        forecast.put("shortForecast", shortForecast);
+        forecast.put("detailedForecast", detailedForecast);
 
-        return collection;
+        return forecast;
     }
 
     public int getNumber() {
         return number;
     }
-    public String getNumberAsString() {
+
+    private String getNumberAsString() {
         return Integer.toString(number);
     }
 
@@ -64,10 +67,15 @@ class Period {
         return name;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
     public int getTemperature() {
         return temperature;
     }
-    public String getTemperatureAsString() {
+
+    private String getTemperatureAsString() {
         return Integer.toString(temperature);
     }
 

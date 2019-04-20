@@ -55,4 +55,12 @@ class WeatherPointsProperties {
     public String toString() {
         return "THIS IS THE PROPERTIES OBJECT";
     }
+
+    public String getForecastHourly() {
+        return forecastHourly;
+    }
+
+    public String getForecastGridData() {
+        return forecastGridData;
+    }
 }

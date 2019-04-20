@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TestParsing {
-    Parser parser = new Parser();
-    PullRequest pull = new PullRequest();
+    private Parser parser = new Parser();
+    private PullRequest pull = new PullRequest();
 
     private WeatherPoints getSampleWeatherPointsAsJson() {
         InputStream sampleInputStream =
@@ -30,23 +30,13 @@ public class TestParsing {
                 weatherPoints.getProperties().getForecast());
     }
 
-    @Test
-    public void testGetCurrentWeather() throws IOException {
-        WeatherPoints weatherPoints = getSampleWeatherPointsAsJson();
-        Period[] exampleForecast = parser.getCurrentForecast(weatherPoints);
-        HashMap<String, String> forecastToday = exampleForecast[0].getForecast();
-
-        Assert.assertNotNull(forecastToday);
-        Assert.assertNotNull(forecastToday.get("name"));
-    }
 
     @Test
     public void testGetWeather0() {
-        Period[] forecast = parser.getForecast("Delaware, IN");
+        ArrayList<WeatherZonesFeatures> wzf = parser.searchZoneNamesFor("Delaware, IN");
+        Period[] forecast = parser.getForecast(wzf.get(0));
 
-        String expectedName = "";
         int expectedNumber = 1;
-        //Assert.assertEquals(expectedName, forecast[0].getName());
         Assert.assertEquals(expectedNumber, forecast[0].getNumber());
     }
 
@@ -97,7 +87,8 @@ public class TestParsing {
     public void testGetSearchZones0() {
         //testing for the best case scenario (one item in list)
         ArrayList<WeatherZonesFeatures> options = parser.searchZoneNamesFor("Delaware, IN");
-        Assert.assertTrue(options.size() == 1);
+        int expectedSize0 = 1;
+        Assert.assertEquals(expectedSize0, options.size());
 
         String expectedLocation = "Delaware, IN";
         Assert.assertEquals(expectedLocation, options.get(0).getProperties().getLocation());
@@ -108,6 +99,7 @@ public class TestParsing {
 
         //testing for no items in list (no matches found in zones)
         ArrayList<WeatherZonesFeatures> options2 = parser.searchZoneNamesFor("unreasonable search quarry");
-        Assert.assertTrue(options2.size() == 0);
+        int expectedSize1 = 0;
+        Assert.assertEquals(expectedSize1, options2.size());
     }
 }

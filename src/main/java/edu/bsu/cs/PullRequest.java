@@ -8,20 +8,10 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-//pulls data
+//pulls live data from an online source
 public class PullRequest {
 
-    /*
-    takes a string to be used as a query to pull from online
-     */
-    public BufferedReader pullDataStreamFrom(String urlQuery) throws IOException {
-        URL url = new URL(urlQuery);
-        URLConnection connection = url.openConnection();
-        return new BufferedReader(new InputStreamReader(
-                connection.getInputStream()));
-    }
-
-    public BufferedReader pullFrom(String urlQuery) {
+    private BufferedReader pullFrom(String urlQuery) {
         BufferedReader buffer = null;
 
         try {
@@ -38,21 +28,9 @@ public class PullRequest {
         return buffer;
     }
 
-    public WeatherPoints pullWeather(String exampleSearch) throws IOException {
-        URL url = new URL(exampleSearch);
-        URLConnection connection = url.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(
-                connection.getInputStream()));
-
-        return new Gson().fromJson(in, WeatherPoints.class);
-    }
-
     public WeatherZones pullZones() {
-        BufferedReader zones;
-        zones = pullFrom("https://api.weather.gov/zones/forecast");
-
+        BufferedReader zones = pullFrom("https://api.weather.gov/zones/forecast");
         return new Gson().fromJson(zones, WeatherZones.class);
-
     }
 
     public WeatherZonesForecast pullZonesForecast(String forecastUrl) {
@@ -64,7 +42,6 @@ public class PullRequest {
 
         return wzf;
     }
-
 
     public WeatherPoints pullPoints(double x, double y) {
         BufferedReader buffer = pullFrom("https://api.weather.gov/points/" + y + "," + x);

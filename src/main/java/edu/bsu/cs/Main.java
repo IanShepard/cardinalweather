@@ -40,12 +40,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
+        /*
         Period[] asdf = new Parser().getForecast("Delaware, IN");
         SceneBuilder sceneBuilder = new SceneBuilder();
-        Scene homeScene = sceneBuilder.getHomeScene(asdf[0]);
+        Scene homeScene = sceneBuilder.getHomeScene(asdf);
         primaryStage.setScene(homeScene);
         primaryStage.setTitle("Cardinal Weather");
         primaryStage.show();
+        */
     }
 }
