@@ -66,10 +66,7 @@ public class SceneBuilder {
         Label currentTemperature = new Label("70");
         //Change font size
         setFontSize(currentTemperature, 70);
-        //currentTemperature.setScaleX(5);
-        //currentTemperature.setScaleY(5);
 
-        //change font size//
         Label highTemperature = new Label("80");
         Label lowTemperature = new Label("60");
         Image icon = new Image("https://api.weather.gov/icons/land/night/tsra,90?size=small");
@@ -98,7 +95,7 @@ public class SceneBuilder {
     Takes a node with text and sets the font size so that the characters are ptSize pixels tall.
      */
     public void setFontSize(Node n, int ptSize) {
-        float scaleFactor = ptSize / 10;
+        float scaleFactor = ptSize / 11;
         n.setScaleX(scaleFactor);
         n.setScaleY(scaleFactor);
     }

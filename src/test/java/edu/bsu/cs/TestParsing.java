@@ -7,11 +7,14 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.*;
 
 public class TestParsing {
     private Parser parser = new Parser();
     private PullRequest pull = new PullRequest();
+    private ArrayList<WeatherZonesFeatures> muncieWzf = parser.searchZoneNamesFor("Delaware, IN");
+    private Period[] muncieForecast = parser.getForecast(muncieWzf.get(0));
+    private Period[] muncieHourlyForecast = parser.getHourlyForecast(muncieWzf.get(0));
 
     private WeatherPoints getSampleWeatherPointsAsJson() {
         InputStream sampleInputStream =
@@ -78,4 +81,56 @@ public class TestParsing {
         Assert.assertEquals(expected2, coords[1], 0.00002);
     }
 
+
+    //Testing date and time manipulation
+    @Test
+    public void testParsingDateObjFromString() {
+        String exampleDateString = "2019-04-15T19:00:00-04:00";
+        Calendar calendar = parser.convertStringToCalendar(exampleDateString);
+
+        long expectedEpocTime = 1555369200000L; //"L" at the end because it needs to be a long literal... so weird
+        Assert.assertEquals(expectedEpocTime, calendar.getTimeInMillis());
+    }
+
+    @Test
+    public void testCalendarInPeriod() {
+        Period period = muncieForecast[0];
+
+        // the given calendar is during the period
+        Calendar now = new GregorianCalendar();
+        int expected0 = 0;
+        Assert.assertEquals(expected0, parser.calendarInPeriod(now, period));
+
+        parser.truncateToHour(now);
+        Assert.assertEquals(expected0, parser.calendarInPeriod(now, period));
+
+        //the given calendar is after the period end time
+        Calendar plusTwelveHours = new GregorianCalendar();
+        plusTwelveHours.add(Calendar.HOUR, 12);
+        int expected1 = 1;
+        Assert.assertEquals(expected1, parser.calendarInPeriod(plusTwelveHours, period));
+
+        parser.truncateToHour(plusTwelveHours);
+        Assert.assertEquals(expected1, parser.calendarInPeriod(plusTwelveHours, period));
+
+        //the given calendar is before the period start time
+        Calendar minusTwelveHours = new GregorianCalendar();
+        minusTwelveHours.add(Calendar.HOUR, -12);
+        int expected2 = -1;
+        Assert.assertEquals(expected2, parser.calendarInPeriod(minusTwelveHours, period));
+
+        parser.truncateToHour(minusTwelveHours);
+        Assert.assertEquals(expected2, parser.calendarInPeriod(minusTwelveHours, period));
+    }
+
+    @Test
+    public void testForecastConstructor() {
+        ArrayList<WeatherZonesFeatures> wzf = parser.searchZoneNamesFor("Delaware, IN");
+        Calendar now = new GregorianCalendar();
+        Forecast forecast = new Forecast(wzf.get(0), now);
+
+        Calendar plusOneHour = new GregorianCalendar();
+        plusOneHour.add(Calendar.HOUR, 5);
+        Forecast forecast1 = new Forecast(wzf.get(0), plusOneHour);
+    }
 }

@@ -29,6 +29,7 @@ class Period {
     private int number;
     private String name;
     private String startTime;
+    private String endTime;
     private String isDayTime;
     private int temperature;
     private String temperatureUnit;
@@ -69,6 +70,10 @@ class Period {
 
     public String getStartTime() {
         return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
     }
 
     public int getTemperature() {
