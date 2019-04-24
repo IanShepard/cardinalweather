@@ -49,6 +49,8 @@ public class Main extends Application {
         VBox highBox = sceneBuilder.getHomePage(munice);
         Scene scene = new Scene(highBox);
         primaryStage.setScene(scene);
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(900);
         primaryStage.setTitle("Cardinal Weather");
         primaryStage.show();
 
