@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class SceneBuilder {
-    Stage primaryStage;
+    private Stage primaryStage;
 
     public SceneBuilder(Stage stage) {
         primaryStage = stage;
@@ -34,11 +34,11 @@ public class SceneBuilder {
         return new Scene(parent);
     }
 
-    public HBox getHeaderPane() {
+    private HBox getHeaderPane() {
         Button newLocation = new Button("Change Location");
         newLocation.setOnAction(actionEvent -> {
             ArrayList<String> emptyList = new ArrayList<>();
-            Scene searchPage = getSearchPage(emptyList);
+            Scene searchPage = getSearchPage(emptyList, primaryStage.getScene());
             primaryStage.setScene(searchPage);
         });
 
@@ -51,7 +51,7 @@ public class SceneBuilder {
         return new HBox(newLocation, title, logo);
     }
 
-    public VBox getForecastPane(Forecast forecast) {
+    private VBox getForecastPane(Forecast forecast) {
         Label location = new Label(forecast.getLocation());
         location.setAlignment(Pos.TOP_CENTER);
         HBox tempCompact = getCompact(forecast);
@@ -112,15 +112,26 @@ public class SceneBuilder {
 
     //Search page
 
-    public Scene getSearchPage(ArrayList<String> prevSearch) {
+    public Scene getSearchPage(ArrayList<String> prevSearch, Scene prevScene) {
         Button back = new Button("Back");
+
         Button newSearch = new Button("New Search");
         Button prevLocs = new Button("Previous Locations");
         HBox locSelector = new HBox(newSearch, prevLocs);
         VBox main = new VBox(back, locSelector);
 
+        back.setOnAction(actionEvent -> {
+            primaryStage.setScene(prevScene);
+        });
+        /*
+        newSearch.setOnAction(actionEvent -> {
+            HBox searcher = getNewSearch();
+            if (main.getChildren().get(2));
+        });
+        */
         return new Scene(main);
     }
+
     private HBox getNewSearch() {
         TextField searchField = new TextField();
         Button search = new Button("Search");
