@@ -40,13 +40,17 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        /*
-        Period[] asdf = new Parser().getForecast("Delaware, IN");
         SceneBuilder sceneBuilder = new SceneBuilder();
-        Scene homeScene = sceneBuilder.getHomeScene(asdf);
-        primaryStage.setScene(homeScene);
+        Parser parser = new Parser();
+
+        ArrayList<WeatherZonesFeatures> options = parser.searchZoneNamesFor("Delaware, IN");
+        Forecast munice = new Forecast(options.get(0));
+
+        VBox highBox = sceneBuilder.getHomePage(munice);
+        Scene scene = new Scene(highBox);
+        primaryStage.setScene(scene);
         primaryStage.setTitle("Cardinal Weather");
         primaryStage.show();
-        */
+
     }
 }

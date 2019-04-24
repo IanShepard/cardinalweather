@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import org.junit.Test;
 
 import java.awt.*;
 import java.io.FileInputStream;
@@ -15,8 +16,11 @@ import java.io.FileNotFoundException;
 public class TestJavaFX extends Application {
 
     public static void main(String[] args) {
+
         launch(args);
     }
+
+
 
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
@@ -32,5 +36,10 @@ public class TestJavaFX extends Application {
 
         Stage stage0 = new Stage();
         stage0.show();
+    }
+
+    @Test
+    public void testHighBox() {
+
     }
 }

@@ -74,13 +74,18 @@ public class Forecast {
                     lowTemperature = dailyForecast[i+1].getTemperature();
                     break;
                 } else {
+                    highTemperature = currentTemperature;
                     lowTemperature = period.getTemperature();
                     break;
                 }
             }
         }
 
-        //information from
+        //TODO information from... the third branch
+    }
+
+    public Forecast(WeatherZonesFeatures wzf) {
+        this(wzf, new GregorianCalendar());
     }
 
     public String getLocation() {
@@ -107,12 +112,24 @@ public class Forecast {
         return highTemperature;
     }
 
+    public String getHighTemperatureAsString() {
+        return String.valueOf(highTemperature);
+    }
+
     public int getLowTemperature() {
         return lowTemperature;
     }
 
+    public String getLowTemperatureAsString() {
+        return String.valueOf(lowTemperature);
+    }
+
     public int getCurrentTemperature() {
         return currentTemperature;
+    }
+
+    public String getCurrentTemperatureAsString() {
+        return String.valueOf(currentTemperature);
     }
 
     public String getName() {

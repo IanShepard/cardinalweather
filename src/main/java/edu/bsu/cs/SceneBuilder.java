@@ -4,12 +4,16 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 public class SceneBuilder {
 
@@ -62,6 +66,14 @@ public class SceneBuilder {
         return scene;
     }
 
+    public VBox getHomePage(Forecast forecast) {
+        Label location = new Label(forecast.getLowTemperatureAsString());
+        HBox tempCompact = getCompact(forecast);
+        VBox cloudCover = getCloudCover(forecast);
+
+        return new VBox(location, tempCompact, cloudCover);
+    }
+
     private VBox getForecastBox(Period period) {
         Label currentTemperature = new Label("70");
         //Change font size
@@ -81,22 +93,70 @@ public class SceneBuilder {
         return forecastBox;
     }
 
-    /*
-    private HBox getHigh(Period period) {}
 
-    private HBox getLow (Period period) {}
+    public HBox getHigh(Forecast forecast) {
+        Label tempHigh = new Label(forecast.getHighTemperatureAsString());
+        setFontSize(tempHigh, 30);
+        Image upArrow = new Image(getClass().getResourceAsStream("/up_arrow.png"));
+        ImageView imageView = new ImageView(upArrow);
+        imageView.setFitHeight(25);
+        imageView.setFitWidth(25);
+        //scaleNodeSize(imageView, 0.05f);
 
-    private VBox getHighLow (Period period) {}
+        return new HBox(imageView, tempHigh);
+    }
 
-    private HBox getCompact () {}
-    */
+    public HBox getLow (Forecast forecast) {
+        Label tempLow = new Label(forecast.getLowTemperatureAsString());
+        Image downArrow = new Image(getClass().getResourceAsStream("/down_arrow.png"));
+        ImageView imageView = new ImageView(downArrow);
+        scaleNodeSize(imageView, 0.05f);
+
+        return new HBox(imageView, tempLow);
+    }
+
+    private VBox getHighLow (Forecast forecast) {
+        HBox high = getHigh(forecast);
+        HBox low = getLow(forecast);
+
+        return new VBox(high, low);
+    }
+
+    private HBox getCompact (Forecast forecast) {
+        Label tempCurr = new Label(forecast.getCurrentTemperatureAsString());
+        VBox tempHighLow = getHighLow(forecast);
+
+        return new HBox(tempCurr, tempHighLow);
+    }
+
+    private VBox getCloudCover(Forecast forecast) {
+        Image icon = new Image(forecast.getIconSmall());
+        ImageView imageView = new ImageView(icon);
+        Label shortForecast = new Label(forecast.getShortForecast());
+
+        return new VBox(imageView, shortForecast);
+    }
+
+    private void center(Node node) {}
 
     /*
     Takes a node with text and sets the font size so that the characters are ptSize pixels tall.
      */
     public void setFontSize(Node n, int ptSize) {
         float scaleFactor = ptSize / 11;
-        n.setScaleX(scaleFactor);
-        n.setScaleY(scaleFactor);
+        scaleNodeSize(n, scaleFactor);
+    }
+
+    public void scaleNodeSize(Node n, float scaler) {
+        n.setScaleX(scaler);
+        n.setScaleY(scaler);
+    }
+
+    public ChoiceBox<String> fillChoiceBox(ArrayList<String> choices) {
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        for(String choice : choices) {
+            choiceBox.getItems().add(choice);
+        }
+        return choiceBox;
     }
 }
