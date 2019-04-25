@@ -2,7 +2,7 @@ FP-CardinalWeather
 
 Authors: Corbin Curnutt, Matthew Schrag, Ian Shepard, Yuning Luo
 
-Details: An simple and clean application that pulls and displays weather data.
+Details: A simple and clean application that pulls and displays weather data.
 
 API used: National Weather Service API
 https://www.weather.gov/documentation/services-web-api
