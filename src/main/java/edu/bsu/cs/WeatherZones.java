@@ -24,6 +24,10 @@ class WeatherZonesFeatures {
     public WeatherZonesProperties getProperties() {
         return properties;
     }
+
+    public String getLocation() {
+        return getProperties().getLocation();
+    }
 }
 
 class WeatherZonesProperties {

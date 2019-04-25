@@ -18,6 +18,8 @@ import java.util.GregorianCalendar;
 public class SceneBuilder {
     private Stage primaryStage;
     private WeatherZonesFeatures currLocation;
+    private ArrayList<WeatherZonesFeatures> prevLocWzf = new ArrayList<>();
+    private ArrayList<String> prevLocStr = new ArrayList<>();
 
     public SceneBuilder(Stage stage, WeatherZonesFeatures currentLoc) {
         primaryStage = stage;
@@ -151,37 +153,87 @@ public class SceneBuilder {
 
     //Search page
 
-    public Scene getSearchPage(ArrayList<String> prevSearch, Scene prevScene) {
-        Button back = new Button("Back");
+    private Scene getSearchPage(ArrayList<String> prevSearch, Scene prevScene) {
+        HBox prevSearchBox = getPrevSearch(prevLocStr);
+        prevSearchBox.setTranslateY(30);
+        prevSearchBox.setTranslateX(5);
 
+        Button back = new Button("Back");
+        scaleNodeSize(back, 1.25f);
+        back.setTranslateX(12);
+        back.setTranslateY(4);
         Button newSearch = new Button("New Search");
+        scaleNodeSize(newSearch, 1.25f);
+        newSearch.setTranslateX(15);
+        newSearch.setTranslateY(20);
         Button prevLocs = new Button("Previous Locations");
+        prevLocs.setTranslateX(50);
+        prevLocs.setTranslateY(20);
+        scaleNodeSize(prevLocs, 1.25f);
         HBox locSelector = new HBox(newSearch, prevLocs);
         VBox main = new VBox(back, locSelector);
+        HBox newSearchBox = getNewSearch(main);
+        newSearchBox.setTranslateX(5);
+        newSearchBox.setTranslateY(30);
 
         back.setOnAction(actionEvent -> {
             primaryStage.setScene(prevScene);
         });
-        /*
+
         newSearch.setOnAction(actionEvent -> {
-            HBox searcher = getNewSearch();
-            if (main.getChildren().get(2));
+                main.getChildren().removeAll(prevSearchBox);
+                main.getChildren().add(newSearchBox);
         });
-        */
+
+        prevLocs.setOnAction(actionEvent -> {
+            main.getChildren().removeAll(newSearchBox);
+            main.getChildren().add(prevSearchBox);
+        });
+
         return new Scene(main);
     }
 
-    private HBox getNewSearch() {
+    private HBox getNewSearch(VBox parent) {
         TextField searchField = new TextField();
         Button search = new Button("Search");
-        //TODO add functionality to button
+
+        search.setOnAction(actionEvent -> {
+            String querry = searchField.getText();
+            ArrayList<WeatherZonesFeatures> wzfs = new Parser().searchZoneNamesFor(querry);
+
+            ArrayList<Forecast> forecasts = new ArrayList<>();
+            ArrayList<String> locations = new ArrayList<>();
+            for (WeatherZonesFeatures wzf : wzfs) {
+                Forecast forecast = new Forecast(wzf);
+                forecasts.add(forecast);
+                locations.add(forecast.getLocation());
+            }
+
+            if (locations.size() == 0) {
+                Label error = new Label("No locations found");
+                parent.getChildren().add(error);
+            } else if (locations.size() == 1) {
+                primaryStage.setScene(getHomePage(forecasts.get(0)));
+                searchedLocation(wzfs.get(0));
+            } else {
+                HBox options = getPrevSearch(locations);
+                parent.getChildren().add(options);
+            }
+        });
+
         return new HBox(searchField, search);
     }
 
     private HBox getPrevSearch(ArrayList<String> prevSearch) {
-        ChoiceBox<String> prevSearches = fillChoiceBox(prevSearch);
+        ChoiceBox<String> prevSearches = fillChoiceBox(prevLocStr);
         Button go = new Button("Go");
-        //TODO add functionality to button
+
+        go.setOnAction(actionEvent -> {
+            int index = prevLocStr.indexOf(prevSearches.getValue());
+            WeatherZonesFeatures wzf = prevLocWzf.get(index);
+            primaryStage.setScene(getHomePage(new Forecast(wzf)));
+        });
+
         return new HBox(prevSearches, go);
     }
 
@@ -189,6 +241,7 @@ public class SceneBuilder {
 
     //five-day forecast
     //TODO design five-day forecast and implement similar to getHomePage(). Sections broken down into their own functions.
+
     //Hourly forecast
 
     //TODO design hourly forecast and implement similar to getHomePage(). May use same components as five-day forecast.
@@ -271,5 +324,21 @@ public class SceneBuilder {
     private ImageView imageFromUrl(String url) {
         Image image = new Image(url);
         return new ImageView(image);
+    }
+
+    private ArrayList<Forecast> getForecasts(WeatherZonesFeatures wzf) {
+        ArrayList<Forecast> forecasts = new ArrayList<>();
+        Calendar time = new GregorianCalendar();
+        for (int i=0;i<10;i++) {
+            time.add(Calendar.HOUR, 1);
+            forecasts.add(new Forecast(wzf, time));
+        }
+        return forecasts;
+    }
+
+    private void searchedLocation(WeatherZonesFeatures wzf) {
+        currLocation = wzf;
+        prevLocWzf.add(wzf);
+        prevLocStr.add(wzf.getLocation());
     }
 }

@@ -81,7 +81,7 @@ public class Forecast {
             }
         }
 
-        //TODO information from... the third branch
+        //TODO information from the third branch
     }
 
     public Forecast(WeatherZonesFeatures wzf) {
