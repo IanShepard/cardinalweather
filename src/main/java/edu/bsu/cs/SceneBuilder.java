@@ -73,12 +73,22 @@ public class SceneBuilder {
             Calendar time = new GregorianCalendar();
             for(int i=0;i<5;i++){
                 forecasts.add(new Forecast(currLocation, time));
-                time.add(Calendar.HOUR, 1);
+                time.add(Calendar.DAY_OF_MONTH, 1);
             }
             Scene forecastPage = getHourlyForecastPage(primaryStage.getScene(), forecasts);
             primaryStage.setScene(forecastPage);
         });
+
         Button dailyForecast = new Button("Daily Forecast");
+        dailyForecast.setOnAction(actionEvent -> {
+            ArrayList<Forecast> forecasts = new ArrayList<>();
+
+            for(int i=0;i<5;i++){
+                forecasts.add(new Forecast(currLocation));
+            }
+            Scene dailyForecastPage = getDailyForecastPage(primaryStage.getScene(), forecasts);
+            primaryStage.setScene(dailyForecastPage);
+        });
 
         return new VBox(hourlyForecast, dailyForecast);
     }
@@ -126,7 +136,7 @@ public class SceneBuilder {
 
     //Search page
 
-    public Scene getSearchPage(ArrayList<String> prevSearch, Scene prevScene) {
+    private Scene getSearchPage(ArrayList<String> prevSearch, Scene prevScene) {
         Button back = new Button("Back");
 
         Button newSearch = new Button("New Search");
@@ -137,12 +147,7 @@ public class SceneBuilder {
         back.setOnAction(actionEvent -> {
             primaryStage.setScene(prevScene);
         });
-        /*
-        newSearch.setOnAction(actionEvent -> {
-            HBox searcher = getNewSearch();
-            if (main.getChildren().get(2));
-        });
-        */
+
         return new Scene(main);
     }
 
@@ -164,10 +169,33 @@ public class SceneBuilder {
 
     //five-day forecast
     //TODO design five-day forecast and implement similar to getHomePage(). Sections broken down into their own functions.
+    private Scene getDailyForecastPage (Scene prevScene, ArrayList<Forecast> forecasts){
+        Button back = new Button("Back");
+        HBox header = getHeaderPane();
+        back.setOnAction(actionEvent -> {
+            primaryStage.setScene(prevScene);
+        });
+
+        HBox dailyForecasts = new HBox();
+        for(int i =0;i<5;i++){
+            VBox dailyForecast = getDailyForecast(forecasts.get(i));
+            dailyForecasts.getChildren().add(dailyForecast);
+        }
+
+        VBox structure = new VBox(header, back, dailyForecasts);
+        return new Scene(structure);
+    }
+    private VBox getDailyForecast(Forecast forecast){
+
+        Label text = new Label(forecast.getName());
+        ImageView one = imageFromUrl(forecast.getIconMedium());
+        VBox tempHighLow = getHighLow(forecast);
+        return new VBox(text, one, tempHighLow);
+    }
     //Hourly forecast
 
     //TODO design hourly forecast and implement similar to getHomePage(). May use same components as five-day forecast.
-    public Scene getHourlyForecastPage (Scene prevScene, ArrayList<Forecast> forecasts){
+    private Scene getHourlyForecastPage (Scene prevScene, ArrayList<Forecast> forecasts){
         Button back = new Button("Back");
         HBox header = getHeaderPane();
         back.setOnAction(actionEvent -> {
