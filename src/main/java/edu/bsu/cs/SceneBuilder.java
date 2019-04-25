@@ -1,5 +1,6 @@
 package edu.bsu.cs;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -40,6 +41,9 @@ public class SceneBuilder {
 
     private HBox getHeaderPane() {
         Button newLocation = new Button("Change Location");
+        scaleNodeSize(newLocation, 1.25f);
+        newLocation.setTranslateX(16);
+        newLocation.setTranslateY(10);
         newLocation.setOnAction(actionEvent -> {
             ArrayList<String> emptyList = new ArrayList<>();
             Scene searchPage = getSearchPage(emptyList, primaryStage.getScene());
@@ -48,8 +52,12 @@ public class SceneBuilder {
 
         newLocation.setAlignment(Pos.TOP_LEFT);
         Label title = new Label("Cardinal Weather");
+        setFontSize(title, 30);
+        title.setPadding(new Insets(10,0,0,160));
         title.setAlignment(Pos.TOP_CENTER);
         ImageView logo = imageFromLocal("/edu/bsu/cs/images/up_arrow.png");
+        logo.setTranslateX(480);
+        logo.setTranslateY(10);
         setDimensions(logo, 30, 30);
 
         return new HBox(newLocation, title, logo);
@@ -57,17 +65,22 @@ public class SceneBuilder {
 
     private VBox getForecastPane(Forecast forecast) {
         Label location = new Label(forecast.getLocation());
+        setFontSize(location, 30);
         location.setAlignment(Pos.TOP_CENTER);
+        location.setPadding(new Insets(15,0,0,0));
         HBox tempCompact = getCompact(forecast);
         tempCompact.setAlignment(Pos.TOP_CENTER);
         VBox cloudCover = getCloudCover(forecast);
         cloudCover.setAlignment(Pos.TOP_CENTER);
+        cloudCover.setPadding(new Insets(110, 0, 0, 0));
 
         return new VBox(location, tempCompact, cloudCover);
     }
 
     private VBox getOptionsPane() {
         Button hourlyForecast = new Button("Hourly Forecast");
+        scaleNodeSize(hourlyForecast, 1.25f);
+        hourlyForecast.setTranslateX(16);
         hourlyForecast.setOnAction(actionEvent -> {
             ArrayList<Forecast> forecasts = new ArrayList<>();
             Calendar time = new GregorianCalendar();
@@ -79,27 +92,36 @@ public class SceneBuilder {
             primaryStage.setScene(forecastPage);
         });
         Button dailyForecast = new Button("Daily Forecast");
+        scaleNodeSize(dailyForecast, 1.25f);
+        dailyForecast.setTranslateX(15);
+        dailyForecast.setTranslateY(15);
 
         return new VBox(hourlyForecast, dailyForecast);
     }
 
     private VBox getCloudCover(Forecast forecast) {
         ImageView cloudCover = imageFromUrl(forecast.getIconSmall());
+        scaleNodeSize(cloudCover,4 );
         Label shortForecast = new Label(forecast.getShortForecast());
-
+        setFontSize(shortForecast, 30);
+        shortForecast.setPadding(new Insets(60, 0, 0, 0));
         return new VBox(cloudCover, shortForecast);
     }
 
     private HBox getCompact (Forecast forecast) {
         Label tempCurr = new Label(forecast.getCurrentTemperatureAsString());
+        setFontSize(tempCurr, 30);
         VBox tempHighLow = getHighLow(forecast);
+        tempCurr.setPadding(new Insets(38, 0, 0, 0));
 
         return new HBox(tempCurr, tempHighLow);
     }
 
     private VBox getHighLow (Forecast forecast) {
         HBox high = getHigh(forecast);
+        high.setPadding(new Insets(45, 0, 0, 15));
         HBox low = getLow(forecast);
+        low.setPadding(new Insets(20, 0, 0, 15));
 
         return new VBox(high, low);
     }
@@ -108,6 +130,7 @@ public class SceneBuilder {
         Label tempHigh = new Label(forecast.getHighTemperatureAsString());
         setFontSize(tempHigh, 30);
         ImageView upArrow = imageFromLocal("/edu/bsu/cs/images/up_arrow.png");
+        tempHigh.setPadding(new Insets(3, 0, 0, 8));
         upArrow.setFitHeight(25);
         upArrow.setFitWidth(25);
 
@@ -116,7 +139,9 @@ public class SceneBuilder {
 
     private HBox getLow(Forecast forecast) {
         Label tempLow = new Label(forecast.getLowTemperatureAsString());
+        setFontSize(tempLow, 30);
         ImageView downArrow = imageFromLocal("/edu/bsu/cs/images/down_arrow.png");
+        tempLow.setPadding(new Insets(2, 0, 0, 8));
         downArrow.setFitWidth(25);
         downArrow.setFitHeight(25);
 
@@ -169,6 +194,9 @@ public class SceneBuilder {
     //TODO design hourly forecast and implement similar to getHomePage(). May use same components as five-day forecast.
     public Scene getHourlyForecastPage (Scene prevScene, ArrayList<Forecast> forecasts){
         Button back = new Button("Back");
+        scaleNodeSize(back, 1.25f);
+        back.setTranslateX(10);
+        back.setTranslateY(20);
         HBox header = getHeaderPane();
         back.setOnAction(actionEvent -> {
             primaryStage.setScene(prevScene);
@@ -194,8 +222,16 @@ public class SceneBuilder {
             time=forecast.getHour()+" AM";
         }
         Label text = new Label(time);
+        setFontSize(text, 20);
+        text.setTranslateX(30);
+        text.setTranslateY(30);
         ImageView one = imageFromUrl(forecast.getIconMedium());
+        one.setTranslateX(5);
+        one.setTranslateY(30);
         Label temp = new Label(forecast.getCurrentTemperatureAsString());
+        setFontSize(temp, 20);
+        temp.setTranslateX(40);
+        temp.setTranslateY(30);
 
         return new VBox(text, one, temp);
     }
