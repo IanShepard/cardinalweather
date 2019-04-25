@@ -29,10 +29,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        SceneBuilder sceneBuilder = new SceneBuilder(primaryStage);
         Parser parser = new Parser();
 
         ArrayList<WeatherZonesFeatures> options = parser.searchZoneNamesFor("Delaware, IN");
+        SceneBuilder sceneBuilder = new SceneBuilder(primaryStage, options.get(0));
         Forecast muncie = new Forecast(options.get(0));
         Scene homePage = sceneBuilder.getHomePage(muncie);
 

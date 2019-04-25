@@ -11,12 +11,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class SceneBuilder {
     private Stage primaryStage;
+    private WeatherZonesFeatures currLocation;
 
-    public SceneBuilder(Stage stage) {
+    public SceneBuilder(Stage stage, WeatherZonesFeatures currentLoc) {
         primaryStage = stage;
+        currLocation = currentLoc;
     }
 
     //Home page
@@ -64,6 +68,16 @@ public class SceneBuilder {
 
     private VBox getOptionsPane() {
         Button hourlyForecast = new Button("Hourly Forecast");
+        hourlyForecast.setOnAction(actionEvent -> {
+            ArrayList<Forecast> forecasts = new ArrayList<>();
+            Calendar time = new GregorianCalendar();
+            for(int i=0;i<5;i++){
+                forecasts.add(new Forecast(currLocation, time));
+                time.add(Calendar.HOUR, 1);
+            }
+            Scene forecastPage = getHourlyForecastPage(primaryStage.getScene(), forecasts);
+            primaryStage.setScene(forecastPage);
+        });
         Button dailyForecast = new Button("Daily Forecast");
 
         return new VBox(hourlyForecast, dailyForecast);
@@ -150,10 +164,41 @@ public class SceneBuilder {
 
     //five-day forecast
     //TODO design five-day forecast and implement similar to getHomePage(). Sections broken down into their own functions.
-
     //Hourly forecast
-    //TODO design hourly forecast and implement similar to getHomePage(). May use same components as five-day forecast.
 
+    //TODO design hourly forecast and implement similar to getHomePage(). May use same components as five-day forecast.
+    public Scene getHourlyForecastPage (Scene prevScene, ArrayList<Forecast> forecasts){
+        Button back = new Button("Back");
+        HBox header = getHeaderPane();
+        back.setOnAction(actionEvent -> {
+            primaryStage.setScene(prevScene);
+        });
+        VBox structure = new VBox(header, back);
+        HBox hourlyForecasts = new HBox();
+        for(int i =0;i<5;i++){
+
+            VBox hourlyForecast = getHourlyForecast(forecasts.get(i));
+            hourlyForecasts.getChildren().add(hourlyForecast);
+        }
+
+        structure.getChildren().add(hourlyForecasts);
+        return new Scene(structure);
+    }
+    private VBox getHourlyForecast(Forecast forecast){
+
+        String time;
+        if (forecast.getAmPm().equals("1")){
+            time=forecast.getHour()+" PM";
+        }
+        else {
+            time=forecast.getHour()+" AM";
+        }
+        Label text = new Label(time);
+        ImageView one = imageFromUrl(forecast.getIconMedium());
+        Label temp = new Label(forecast.getCurrentTemperatureAsString());
+
+        return new VBox(text, one, temp);
+    }
     //helper functions
 
     /*

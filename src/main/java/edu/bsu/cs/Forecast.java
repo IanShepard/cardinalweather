@@ -104,6 +104,10 @@ public class Forecast {
         return String.valueOf(startTime.get(Calendar.HOUR));
     }
 
+    public String getAmPm() {
+        return String.valueOf(startTime.get(Calendar.AM_PM));
+    }
+
     public Calendar getEndTime() {
         return endTime;
     }
