@@ -1,5 +1,6 @@
 package edu.bsu.cs;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -23,7 +24,6 @@ public class SceneBuilder {
     //TODO resize nodes to appropriate size
     public Scene getHomePage(Forecast forecast) {
         HBox header = getHeaderPane();
-        //header.setAlignment(Pos.TOP_CENTER);
         //TODO make button in top-left, label top-center, and icon top-right
         VBox forecastBox = getForecastPane(forecast);
         forecastBox.setAlignment(Pos.BOTTOM_CENTER);
@@ -36,56 +36,77 @@ public class SceneBuilder {
 
     private HBox getHeaderPane() {
         Button newLocation = new Button("Change Location");
+        scaleNodeSize(newLocation, 1.25f);
+        newLocation.setTranslateX(16);
+        newLocation.setTranslateY(10);
         newLocation.setOnAction(actionEvent -> {
             ArrayList<String> emptyList = new ArrayList<>();
             Scene searchPage = getSearchPage(emptyList, primaryStage.getScene());
             primaryStage.setScene(searchPage);
         });
 
-        newLocation.setAlignment(Pos.TOP_LEFT);
+        newLocation.setAlignment(Pos.TOP_CENTER);
         Label title = new Label("Cardinal Weather");
+        setFontSize(title, 30);
+        title.setPadding(new Insets(10,0,0,160));
         title.setAlignment(Pos.TOP_CENTER);
         ImageView logo = imageFromLocal("/edu/bsu/cs/images/up_arrow.png");
+        logo.setTranslateX(480);
+        logo.setTranslateY(10);
         setDimensions(logo, 30, 30);
-
         return new HBox(newLocation, title, logo);
     }
 
     private VBox getForecastPane(Forecast forecast) {
         Label location = new Label(forecast.getLocation());
+        setFontSize(location, 30);
         location.setAlignment(Pos.TOP_CENTER);
+        location.setPadding(new Insets(15,0,0,0));
         HBox tempCompact = getCompact(forecast);
         tempCompact.setAlignment(Pos.TOP_CENTER);
         VBox cloudCover = getCloudCover(forecast);
         cloudCover.setAlignment(Pos.TOP_CENTER);
+        cloudCover.setPadding(new Insets(110, 0, 0, 0));
 
         return new VBox(location, tempCompact, cloudCover);
     }
 
     private VBox getOptionsPane() {
         Button hourlyForecast = new Button("Hourly Forecast");
+        scaleNodeSize(hourlyForecast, 1.25f);
+        hourlyForecast.setTranslateX(16);
         Button dailyForecast = new Button("Daily Forecast");
+        scaleNodeSize(dailyForecast, 1.25f);
+        dailyForecast.setTranslateX(15);
+        dailyForecast.setTranslateY(15);
 
         return new VBox(hourlyForecast, dailyForecast);
     }
 
     private VBox getCloudCover(Forecast forecast) {
         ImageView cloudCover = imageFromUrl(forecast.getIconSmall());
+        scaleNodeSize(cloudCover,4 );
         Label shortForecast = new Label(forecast.getShortForecast());
+        setFontSize(shortForecast, 30);
+        shortForecast.setPadding(new Insets(60, 0, 0, 0));
 
         return new VBox(cloudCover, shortForecast);
     }
 
     private HBox getCompact (Forecast forecast) {
         Label tempCurr = new Label(forecast.getCurrentTemperatureAsString());
+        setFontSize(tempCurr, 30);
         VBox tempHighLow = getHighLow(forecast);
+        tempCurr.setPadding(new Insets(38, 0, 0, 0));
 
         return new HBox(tempCurr, tempHighLow);
     }
 
     private VBox getHighLow (Forecast forecast) {
         HBox high = getHigh(forecast);
+        high.setPadding(new Insets(45, 0, 0, 15));
         HBox low = getLow(forecast);
+        low.setPadding(new Insets(20, 0, 0, 15));
 
         return new VBox(high, low);
     }
@@ -94,6 +115,7 @@ public class SceneBuilder {
         Label tempHigh = new Label(forecast.getHighTemperatureAsString());
         setFontSize(tempHigh, 30);
         ImageView upArrow = imageFromLocal("/edu/bsu/cs/images/up_arrow.png");
+        tempHigh.setPadding(new Insets(3, 0, 0, 8));
         upArrow.setFitHeight(25);
         upArrow.setFitWidth(25);
 
@@ -102,7 +124,9 @@ public class SceneBuilder {
 
     private HBox getLow(Forecast forecast) {
         Label tempLow = new Label(forecast.getLowTemperatureAsString());
+        setFontSize(tempLow, 30);
         ImageView downArrow = imageFromLocal("/edu/bsu/cs/images/down_arrow.png");
+        tempLow.setPadding(new Insets(2, 0, 0, 8));
         downArrow.setFitWidth(25);
         downArrow.setFitHeight(25);
 
